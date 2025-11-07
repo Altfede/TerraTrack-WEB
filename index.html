@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TerraTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <div class="brand">
+          <span class="brand__title">TerraTrack</span>
+          <span class="brand__subtitle">Social tracking reinventato</span>
+        </div>
+        <div class="status" aria-live="polite">
+          <div class="status__item">
+            <span class="status__label">Modalità</span>
+            <span class="status__value" id="mode-status">In giro</span>
+          </div>
+          <div class="status__item">
+            <span class="status__label">Ultimo aggiornamento</span>
+            <span class="status__value" id="last-update">—</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="app__main">
+        <section class="map" aria-label="Mappa TerraTrack">
+          <div id="map" role="presentation"></div>
+          <div class="map__fallback" id="map-fallback" hidden>
+            <div class="map__fallback-card">
+              <h2>Serve una chiave API di Google Maps</h2>
+              <p>
+                Definisci <code>window.GOOGLE_MAPS_API_KEY</code> in un file
+                <code>config.js</code> o passa il parametro
+                <code>?gmaps-key=</code> nell'URL per caricare la mappa.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar" aria-label="Pannello dettagli">
+          <section class="panel" id="profile-panel">
+            <header class="panel__header">
+              <h2>Profilo</h2>
+            </header>
+            <div class="panel__content panel__content--grid">
+              <div>
+                <p class="label">Distanza totale</p>
+                <p class="value" id="total-distance">0 km</p>
+              </div>
+              <div>
+                <p class="label">Basi visitate</p>
+                <p class="value" id="bases-visited">0</p>
+              </div>
+              <div>
+                <p class="label">Tempo attivo</p>
+                <p class="value" id="active-time">0 h</p>
+              </div>
+              <div>
+                <p class="label">Missioni concluse</p>
+                <p class="value" id="missions-completed">0</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="friends-panel">
+            <header class="panel__header">
+              <h2>Squadra in tempo reale</h2>
+            </header>
+            <div class="panel__content">
+              <ul class="list" id="friend-list" aria-live="polite"></ul>
+            </div>
+          </section>
+
+          <section class="panel" id="bases-panel">
+            <header class="panel__header">
+              <div>
+                <h2>Basi e case</h2>
+                <p class="panel__subtitle" id="bases-summary"></p>
+              </div>
+              <button class="ghost-button" id="toggle-bases">Mostra tutte</button>
+            </header>
+            <div class="panel__content">
+              <ul class="list" id="bases-list"></ul>
+            </div>
+          </section>
+
+          <section class="panel" id="base-detail-panel">
+            <header class="panel__header">
+              <h2>Dettagli base</h2>
+            </header>
+            <div class="panel__content" id="base-detail">
+              <p class="empty-state">Seleziona una base dalla mappa o dalla lista.</p>
+            </div>
+          </section>
+
+          <section class="panel" id="missions-panel">
+            <header class="panel__header">
+              <h2>Missioni attive</h2>
+            </header>
+            <div class="panel__content">
+              <ul class="list" id="missions-list"></ul>
+            </div>
+          </section>
+
+          <section class="panel" id="alerts-panel">
+            <header class="panel__header">
+              <h2>Avvisi automatici</h2>
+            </header>
+            <div class="panel__content">
+              <ul class="list" id="alerts-list"></ul>
+            </div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="config.js" defer></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
