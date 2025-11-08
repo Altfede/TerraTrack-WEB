@@ -19,10 +19,32 @@
           <span class="brand__title">TerraTrack</span>
           <span class="brand__subtitle">Social tracking reinventato</span>
         </div>
+        <div class="header-actions">
+          <button class="icon-button" id="toggle-travel-mode" title="Modalità in giro">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
+            </svg>
+          </button>
+          <button class="icon-button" id="open-backpack" title="Zaino virtuale">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 8h-3V4H3C2 4 1 5 1 6v12c0 1 1 2 2 2h15c1 0 2-1 2-2V10c0-1-1-2-2-2zm-5-4v4H5V4h10zm5 14H3V6h2v4h12V8h3v10z"/>
+            </svg>
+          </button>
+          <button class="icon-button" id="open-chat" title="Chat">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
+            <span class="notification-badge" id="chat-badge">3</span>
+          </button>
+        </div>
         <div class="status" aria-live="polite">
           <div class="status__item">
             <span class="status__label">Modalità</span>
-            <span class="status__value" id="mode-status">In giro</span>
+            <span class="status__value" id="mode-status">Normale</span>
+          </div>
+          <div class="status__item">
+            <span class="status__label">Batteria</span>
+            <span class="status__value" id="battery-status">87%</span>
           </div>
           <div class="status__item">
             <span class="status__label">Ultimo aggiornamento</span>
@@ -73,10 +95,33 @@
 
           <section class="panel" id="friends-panel">
             <header class="panel__header">
-              <h2>Squadra in tempo reale</h2>
+              <div>
+                <h2>Squadra in tempo reale</h2>
+              </div>
+              <button class="ghost-button" id="add-friend">Aggiungi amico</button>
             </header>
             <div class="panel__content">
               <ul class="list" id="friend-list" aria-live="polite"></ul>
+            </div>
+          </section>
+
+          <section class="panel" id="backpack-panel">
+            <header class="panel__header">
+              <h2>Zaino virtuale</h2>
+              <span class="panel__subtitle" id="backpack-count">0 oggetti</span>
+            </header>
+            <div class="panel__content">
+              <button class="action-button" id="add-item">+ Aggiungi oggetto</button>
+              <ul class="list" id="backpack-list"></ul>
+            </div>
+          </section>
+
+          <section class="panel" id="badges-panel">
+            <header class="panel__header">
+              <h2>Badge e Traguardi</h2>
+            </header>
+            <div class="panel__content">
+              <div class="badges-grid" id="badges-grid"></div>
             </div>
           </section>
 
@@ -86,7 +131,10 @@
                 <h2>Basi e case</h2>
                 <p class="panel__subtitle" id="bases-summary"></p>
               </div>
-              <button class="ghost-button" id="toggle-bases">Mostra tutte</button>
+              <div style="display: flex; gap: 8px;">
+                <button class="ghost-button" id="create-base">+ Nuova base</button>
+                <button class="ghost-button" id="toggle-bases">Mostra tutte</button>
+              </div>
             </header>
             <div class="panel__content">
               <ul class="list" id="bases-list"></ul>
@@ -122,6 +170,149 @@
         </aside>
       </main>
     </div>
+
+    <!-- Modals -->
+    <div class="modal" id="chat-modal">
+      <div class="modal__content">
+        <div class="modal__header">
+          <h2>Chat Squadra</h2>
+          <button class="close-button" data-modal="chat-modal">&times;</button>
+        </div>
+        <div class="modal__body">
+          <div class="chat-container">
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-container">
+              <input type="text" id="chat-input" placeholder="Scrivi un messaggio..." />
+              <button class="action-button" id="send-message">Invia</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="backpack-modal">
+      <div class="modal__content">
+        <div class="modal__header">
+          <h2>Zaino Virtuale</h2>
+          <button class="close-button" data-modal="backpack-modal">&times;</button>
+        </div>
+        <div class="modal__body">
+          <div class="backpack-grid" id="backpack-modal-grid"></div>
+          <div class="modal-actions">
+            <button class="action-button" id="add-item-modal">+ Aggiungi oggetto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="add-friend-modal">
+      <div class="modal__content modal__content--small">
+        <div class="modal__header">
+          <h2>Aggiungi Amico</h2>
+          <button class="close-button" data-modal="add-friend-modal">&times;</button>
+        </div>
+        <div class="modal__body">
+          <div class="form-group">
+            <label for="friend-code">Codice amico</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="friend-code" placeholder="Es: TERRA-1234-ABCD" />
+              <button class="action-button" id="add-friend-submit">Aggiungi</button>
+            </div>
+          </div>
+          <div class="divider">oppure</div>
+          <div class="form-group">
+            <label>Il tuo codice invito</label>
+            <div class="invite-code-box">
+              <code id="my-invite-code">TERRA-5678-EFGH</code>
+              <button class="ghost-button" id="copy-invite">Copia</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="create-base-modal">
+      <div class="modal__content">
+        <div class="modal__header">
+          <h2>Crea Nuova Base</h2>
+          <button class="close-button" data-modal="create-base-modal">&times;</button>
+        </div>
+        <div class="modal__body">
+          <form id="base-form">
+            <div class="form-group">
+              <label for="base-name">Nome base *</label>
+              <input type="text" id="base-name" required placeholder="Es: Campo Base Nord" />
+            </div>
+            <div class="form-group">
+              <label for="base-description">Descrizione</label>
+              <textarea id="base-description" rows="3" placeholder="Descrivi la tua base..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="base-emoji">Emoji</label>
+              <input type="text" id="base-emoji" placeholder="🏕️" maxlength="2" />
+            </div>
+            <div class="form-group">
+              <label>Categoria</label>
+              <div class="tag-group">
+                <button type="button" class="tag tag-selectable" data-category="urbano">Urbano</button>
+                <button type="button" class="tag tag-selectable" data-category="foresta">Foresta</button>
+                <button type="button" class="tag tag-selectable" data-category="costa">Costa</button>
+                <button type="button" class="tag tag-selectable" data-category="montagna">Montagna</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="base-visibility">Visibilità</label>
+              <select id="base-visibility">
+                <option value="solo-io">Solo io</option>
+                <option value="team" selected>Team</option>
+                <option value="squadra-ristretta">Squadra ristretta</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Posizione</label>
+              <p class="help-text">Usa la tua posizione attuale o clicca sulla mappa per scegliere un punto</p>
+              <button type="button" class="ghost-button" id="use-current-location">📍 Usa posizione corrente</button>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="ghost-button" data-modal="create-base-modal">Annulla</button>
+              <button type="submit" class="action-button">Crea Base</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="add-item-modal">
+      <div class="modal__content modal__content--small">
+        <div class="modal__header">
+          <h2>Aggiungi Oggetto allo Zaino</h2>
+          <button class="close-button" data-modal="add-item-modal">&times;</button>
+        </div>
+        <div class="modal__body">
+          <form id="item-form">
+            <div class="form-group">
+              <label for="item-name">Nome oggetto *</label>
+              <input type="text" id="item-name" required placeholder="Es: Torcia LED" />
+            </div>
+            <div class="form-group">
+              <label for="item-quantity">Quantità</label>
+              <input type="number" id="item-quantity" value="1" min="1" />
+            </div>
+            <div class="form-group">
+              <label for="item-emoji">Emoji</label>
+              <input type="text" id="item-emoji" placeholder="🔦" maxlength="2" />
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="ghost-button" data-modal="add-item-modal">Annulla</button>
+              <button type="submit" class="action-button">Aggiungi</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toast-container"></div>
 
     <script src="config.js" defer></script>
     <script src="app.js" defer></script>
